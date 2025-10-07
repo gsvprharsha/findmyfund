@@ -30,7 +30,7 @@ export function Footer() {
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-2 text-sm font-medium hover:text-primary transition-colors"
               >
-                <Image src="/linkedin.svg" alt="LinkedIn" width={20} height={20} className="h-6 w-6" />
+                <Image src="/linkedin.svg" alt="LinkedIn" width={20} height={20} className="h-6 w-6 dark:invert" />
                 <span>LinkedIn</span>
               </Link>
             </div>

@@ -123,11 +123,11 @@ export default function Home() {
       <Banner />
       <WelcomeDialog />
       <main className="min-h-screen pt-14 font-[family-name:var(--font-geist-sans)]">
-        <div className="max-w-7xl mx-auto px-4 py-8 space-y-8">
-          <div className="flex items-start justify-between gap-4">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
+          <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-6">
             <div className="space-y-4 flex-1">
-              <h1 className="text-4xl font-semibold text-balance">Explore 700+ Funds, Accelerators, and Incubators Worldwide</h1>
-              <p className="text-lg text-muted-foreground max-w-2xl text-pretty">
+              <h1 className="text-2xl sm:text-3xl lg:text-4xl font-semibold text-balance leading-tight">Explore 700+ Funds, Accelerators, and Incubators Worldwide</h1>
+              <p className="text-base sm:text-lg text-muted-foreground max-w-2xl text-pretty">
               Discover and connect with top funds, accelerators, and incubators worldwide. Filter by location, type, and industry focus.
               </p>
               <div className="flex items-center gap-3 flex-wrap">
@@ -145,7 +145,7 @@ export default function Home() {
                 </Button>
               </div>
             </div>
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 self-start lg:self-center">
               <Link
                 href="https://www.linkedin.com/in/gsvprharsha/"
                 target="_blank"
@@ -219,12 +219,12 @@ export default function Home() {
             </div>
 
           {funds.length > 0 && totalPages > 1 && (
-            <div className="flex items-center justify-center gap-4 pt-4">
+            <div className="flex items-center justify-center gap-3 sm:gap-4 pt-4">
               <Button
                 onClick={handlePreviousPage}
                 disabled={currentPage === 1}
                 variant="outline"
-                size="lg"
+                size="sm"
                 className="gap-2 bg-transparent"
               >
                 <ChevronLeft className="h-4 w-4" />
@@ -239,7 +239,7 @@ export default function Home() {
                 onClick={handleNextPage}
                 disabled={currentPage === totalPages}
                 variant="outline"
-                size="lg"
+                size="sm"
                 className="gap-2 bg-transparent"
               >
                 Next
