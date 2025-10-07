@@ -11,7 +11,7 @@ import { Button } from "@/components/ui/button"
 import { ChevronLeft, ChevronRight, Coffee, Plus } from "lucide-react"
 import Image from "next/image"
 import Link from "next/link"
-import { getFunds, getStates, getCategories, type Fund } from "./actions/funds"
+import { getFunds, getStates, getCategories, type Fund, debugCategories } from "./actions/funds"
 import { Skeleton } from "@/components/ui/skeleton"
 
 const ITEMS_PER_PAGE = 9
@@ -33,6 +33,7 @@ export default function Home() {
     const fetchInitialData = async () => {
       try {
         setIsLoading(true)
+
         const [categoriesData, statesData] = await Promise.all([
           getCategories(),
           getStates()
@@ -40,8 +41,13 @@ export default function Home() {
         setAllCategories(categoriesData)
         setAllStates(statesData)
 
-        // Fetch first page of funds
-        const fundsResult = await getFunds(1, ITEMS_PER_PAGE)
+        // Fetch first page of funds with current filters
+        const fundsResult = await getFunds(1, ITEMS_PER_PAGE, {
+          search: searchQuery || undefined,
+          stage: selectedStage !== 'all' ? selectedStage : undefined,
+          category: selectedCategory !== 'all' ? selectedCategory : undefined,
+          state: selectedState !== 'all' ? selectedState : undefined,
+        })
         setFunds(fundsResult.funds)
         setTotalFunds(fundsResult.total)
         setLoadedPages([1])
@@ -55,96 +61,62 @@ export default function Home() {
     fetchInitialData()
   }, [])
 
-  // Fetch additional pages when needed
-  useEffect(() => {
-    const fetchPageData = async () => {
-      if (loadedPages.includes(currentPage) || isLoading) return
-
-      try {
-        setIsLoading(true)
-        const fundsResult = await getFunds(currentPage, ITEMS_PER_PAGE)
-
-        setFunds(prevFunds => {
-          const newFunds = [...prevFunds, ...fundsResult.funds]
-          // Remove duplicates based on id
-          const uniqueFunds = newFunds.filter((fund, index, self) =>
-            index === self.findIndex(f => f.id === fund.id)
-          )
-          return uniqueFunds
-        })
-
-        setLoadedPages(prev => [...prev, currentPage])
-      } catch (error) {
-        console.error("Error fetching page data:", error)
-      } finally {
-        setIsLoading(false)
-      }
-    }
-
-    fetchPageData()
-  }, [currentPage, loadedPages, isLoading])
-
-  const filteredFunds = useMemo(() => {
-    if (isLoading) return []
-    
-    return funds.filter((fund) => {
-      const searchLower = searchQuery.toLowerCase()
-      const matchesSearch =
-        !searchQuery ||
-        fund.firm.toLowerCase().includes(searchLower) ||
-        fund.city.toLowerCase().includes(searchLower) ||
-        fund.categories.some((cat) => cat.name.toLowerCase().includes(searchLower))
-
-      const matchesStage =
-        selectedStage === "all" ||
-        (selectedStage === "seed" && fund.seed) ||
-        (selectedStage === "early" && fund.early) ||
-        (selectedStage === "late" && fund.late)
-
-      const matchesCategory = selectedCategory === "all" || 
-        fund.categories.some((cat) => cat.name === selectedCategory)
-        
-      const matchesState = selectedState === "all" || 
-        fund.state === selectedState
-
-      return matchesSearch && matchesStage && matchesCategory && matchesState
-    })
-  }, [funds, searchQuery, selectedStage, selectedCategory, selectedState, isLoading])
-
   const totalPages = Math.ceil(totalFunds / ITEMS_PER_PAGE)
-  const startIndex = (currentPage - 1) * ITEMS_PER_PAGE
-  const endIndex = startIndex + ITEMS_PER_PAGE
-  const displayedFunds = filteredFunds.slice(startIndex, endIndex)
+  const displayedFunds = funds // The API already returns the correct page
 
   const handlePreviousPage = () => {
-    setCurrentPage((prev) => Math.max(1, prev - 1))
-    window.scrollTo({ top: 0, behavior: "smooth" })
+    if (currentPage > 1) {
+      setCurrentPage(currentPage - 1)
+    }
   }
 
   const handleNextPage = () => {
-    setCurrentPage((prev) => Math.min(totalPages, prev + 1))
-    window.scrollTo({ top: 0, behavior: "smooth" })
+    if (currentPage < totalPages) {
+      setCurrentPage(currentPage + 1)
+    }
   }
 
   const handleFilterChange = <T,>(setter: (value: T) => void) => {
     return (value: T) => {
       setter(value)
       setCurrentPage(1)
-      // Reset loaded pages when filters change
       setLoadedPages([1])
-      // Refetch first page with new filters
-      const refetchFirstPage = async () => {
-        try {
-          const fundsResult = await getFunds(1, ITEMS_PER_PAGE)
-          setFunds(fundsResult.funds)
-          setTotalFunds(fundsResult.total)
-        } catch (error) {
-          console.error("Error refetching data:", error)
-        }
-      }
-      refetchFirstPage()
     }
   }
+
+  // Effect to handle data fetching (both filters and pagination)
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        setIsLoading(true)
+        const fundsResult = await getFunds(currentPage, ITEMS_PER_PAGE, {
+          search: searchQuery || undefined,
+          stage: selectedStage !== 'all' ? selectedStage : undefined,
+          category: selectedCategory !== 'all' ? selectedCategory : undefined,
+          state: selectedState !== 'all' ? selectedState : undefined,
+        })
+
+        setFunds(fundsResult.funds)
+        setTotalFunds(fundsResult.total)
+      } catch (error) {
+        console.error("Error fetching data:", error)
+      } finally {
+        setIsLoading(false)
+      }
+    }
+
+    // Only fetch if we're past the initial load
+    if (allCategories.length > 0) {
+      fetchData()
+    }
+  }, [currentPage, searchQuery, selectedStage, selectedCategory, selectedState, allCategories.length])
+
+  // Show loading state immediately when filters change (before API call)
+  useEffect(() => {
+    if (allCategories.length > 0) { // Only after initial load
+      setIsLoading(true)
+    }
+  }, [searchQuery, selectedStage, selectedCategory, selectedState])
 
   return (
     <>
@@ -201,12 +173,12 @@ export default function Home() {
           />
 
           <div className="text-sm text-muted-foreground">
-            Showing {displayedFunds.length} of {filteredFunds.length} funds (from {totalFunds} total)
+            Showing {funds.length} of {totalFunds} funds
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {isLoading ? (
-                Array(3).fill(0).map((_, i) => (
+                Array(9).fill(0).map((_, i) => (
                   <div key={i} className="space-y-3">
                     <Skeleton className="h-6 w-3/4 rounded-md" />
                     <Skeleton className="h-4 w-1/2 rounded-md" />
@@ -246,7 +218,7 @@ export default function Home() {
               )}
             </div>
 
-          {filteredFunds.length > 0 && totalPages > 1 && (
+          {funds.length > 0 && totalPages > 1 && (
             <div className="flex items-center justify-center gap-4 pt-4">
               <Button
                 onClick={handlePreviousPage}
