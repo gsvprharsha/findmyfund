@@ -50,7 +50,7 @@ export function WelcomeDialog() {
           <DialogDescription className="text-base space-y-4 pt-2">
             <p>
               Discover and connect with top seed-stage venture capital firms across the United States. Our directory
-              currently features <strong>US-based funds only</strong>, but we're actively expanding to include
+              currently features <strong>US-based funds only</strong>, but we&apos;re actively expanding to include
               international funds soon.
             </p>
             <p>

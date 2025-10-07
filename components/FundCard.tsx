@@ -1,6 +1,6 @@
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { ExternalLink, Globe, Linkedin } from "lucide-react"
+import { ExternalLink, Globe } from "lucide-react"
 import type { Fund } from "@/data/funds"
 import Link from "next/link"
 import Image from "next/image"

@@ -25,9 +25,6 @@ export function Filters({
   selectedCategory,
   onCategoryChange,
   categories,
-  states = [],
-  selectedState = 'all',
-  onStateChange = () => {},
 }: FiltersProps) {
   return (
     <div className="flex flex-wrap gap-3 p-4 bg-card rounded-xl border shadow-sm">

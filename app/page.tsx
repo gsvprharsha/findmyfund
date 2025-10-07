@@ -8,7 +8,7 @@ import { Footer } from "@/components/Footer"
 import { ThemeToggle } from "@/components/ThemeToggle"
 import { WelcomeDialog } from "@/components/WelcomeDialog"
 import { Button } from "@/components/ui/button"
-import { ChevronLeft, ChevronRight, Coffee, Linkedin, Plus, Star } from "lucide-react"
+import { ChevronLeft, ChevronRight, Coffee, Linkedin, Plus } from "lucide-react"
 import Link from "next/link"
 import { getFunds, getStates, getCategories, type Fund } from "./actions/funds"
 import { Skeleton } from "@/components/ui/skeleton"
@@ -90,8 +90,8 @@ export default function Home() {
     window.scrollTo({ top: 0, behavior: "smooth" })
   }
 
-  const handleFilterChange = (setter: (value: string) => void) => {
-    return (value: string) => {
+  const handleFilterChange = <T,>(setter: (value: T) => void) => {
+    return (value: T) => {
       setter(value)
       setCurrentPage(1)
     }
