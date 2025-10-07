@@ -46,11 +46,11 @@ export function WelcomeDialog() {
     <Dialog open={isOpen} onOpenChange={(open) => !open && handleClose()}>
       <DialogContent className="sm:max-w-[500px] font-[family-name:var(--font-geist-sans)]">
         <DialogHeader>
-          <DialogTitle className="text-2xl">Welcome to US Seed Funds Directory</DialogTitle>
+          <DialogTitle className="text-2xl">Welcome to FindMyFund</DialogTitle>
           <DialogDescription className="text-base space-y-4 pt-2">
             <p>
-              Discover and connect with top seed-stage venture capital firms across the United States. Our directory
-              currently features <strong>US-based funds only</strong>, but we&apos;re actively expanding to include
+              Discover and connect with top seed-stage venture capital firms across the world. Our directory
+              currently features <strong>US-based funds</strong>, but we&apos;re actively expanding to include
               international funds soon.
             </p>
             <p>
@@ -65,7 +65,7 @@ export function WelcomeDialog() {
           </Button>
           <Button asChild className="w-full sm:w-auto">
             <Link
-              href="https://forms.gle/your-google-form-id"
+              href="https://forms.gle/NAMy4YpHJxM8p6eo9"
               target="_blank"
               rel="noopener noreferrer"
               className="gap-2"

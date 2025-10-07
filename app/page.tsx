@@ -105,14 +105,13 @@ export default function Home() {
         <div className="max-w-7xl mx-auto px-4 py-8 space-y-8">
           <div className="flex items-start justify-between gap-4">
             <div className="space-y-4 flex-1">
-              <h1 className="text-4xl font-semibold text-balance">Explore {funds.length}+ US Seed Funds</h1>
+              <h1 className="text-4xl font-semibold text-balance">Explore {funds.length}+ Funds, Accelerators, and Incubators Worldwide</h1>
               <p className="text-lg text-muted-foreground max-w-2xl text-pretty">
-                Discover and connect with top seed-stage venture capital firms across the United States. Filter by
-                location, investment stage, and industry focus.
+              Discover and connect with top funds, accelerators, and incubators worldwide. Filter by location, type, and industry focus.
               </p>
               <div className="flex items-center gap-3 flex-wrap">
                 <Button asChild variant="default" size="default" className="gap-2">
-                  <Link href="https://forms.gle/your-google-form-id" target="_blank" rel="noopener noreferrer">
+                  <Link href="https://forms.gle/NAMy4YpHJxM8p6eo9" target="_blank" rel="noopener noreferrer">
                     <Plus className="h-4 w-4" />
                     Help us add more funds
                   </Link>
