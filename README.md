@@ -68,7 +68,7 @@ This project is licensed under the **MIT License**. The license applies to the f
 
 ## 💡 About
 
-FindMyFund is part of a broader initiative to help D2C founders and startups connect with the right investors and resources. It supports transparency and accessibility in the funding ecosystem.
+FindMyFund is part of a broader initiative to help founders and startups connect with the right investors and resources. It supports transparency and accessibility in the funding ecosystem.
 
 ---
 
