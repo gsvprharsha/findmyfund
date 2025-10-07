@@ -8,7 +8,8 @@ import { Footer } from "@/components/Footer"
 import { ThemeToggle } from "@/components/ThemeToggle"
 import { WelcomeDialog } from "@/components/WelcomeDialog"
 import { Button } from "@/components/ui/button"
-import { ChevronLeft, ChevronRight, Coffee, Linkedin, Plus } from "lucide-react"
+import { ChevronLeft, ChevronRight, Coffee, Plus } from "lucide-react"
+import Image from "next/image"
 import Link from "next/link"
 import { getFunds, getStates, getCategories, type Fund } from "./actions/funds"
 import { Skeleton } from "@/components/ui/skeleton"
@@ -132,7 +133,7 @@ export default function Home() {
                 className="inline-flex items-center justify-center h-10 w-10 rounded-full hover:bg-accent transition-colors"
                 aria-label="LinkedIn Profile"
               >
-                <Linkedin className="h-5 w-5" />
+                <Image src="/linkedin.svg" alt="LinkedIn" width={20} height={20} className="h-6 w-6 dark:invert" />
               </Link>
               <ThemeToggle />
             </div>

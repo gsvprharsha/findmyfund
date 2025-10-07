@@ -10,9 +10,9 @@ export function Banner() {
     >
       <div className="flex items-center justify-center h-14 px-4">
         <p className="text-sm font-bold text-gray-900 text-center">
-          <span className="mr-2 text-base animate-pulse">🧠</span>
-          <span className="text-balance">D2C Founders: Let&apos;s boost your conversion rates → </span>
-          <span className="font-extrabold underline underline-offset-4 hover:text-gray-700 transition-colors decoration-2">
+          <span className="mr-2 text-xl animate-pulse">🧠</span>
+          <span className="text-xl">D2C Founders: Let&apos;s boost your conversion rates → </span>
+          <span className="text-xl font-extrabold underline underline-offset-4 hover:text-gray-700 transition-colors decoration-2">
             Try Free
           </span>
         </p>
