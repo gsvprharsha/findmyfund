@@ -1,36 +1,75 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+<div align="center">
 
-## Getting Started
+# FindMyFund
 
-First, run the development server:
+A public directory for exploring **VC Funds**, **Accelerators**, **Incubators**, and more — built with **Next.js**, **Tailwind CSS**, and **shadcn/ui**.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+FindMyFund is an **open-source frontend** that helps founders, investors, and operators browse, search, and filter global startup funding sources.
+
+[![Buy Me A Coffee](https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png)](https://www.buymeacoffee.com/gsvprharsha)
+
+</div>
+
+## 🧱 Tech Stack
+
+- Next.js (App Router)
+- Tailwind CSS
+- shadcn/ui
+- Supabase
+- TypeScript
+
+## 🚀 Features
+
+- Global directory of VC Funds, Accelerators, and Incubation Centers
+- Fast search and filter functionality
+- Paginated and responsive card-based layout
+- Lazy loading for performance
+- Minimal, elegant UI built with shadcn/ui
+
+## 🗂️ Project Structure
+
+```
+/app          → Next.js app router pages
+/components   → UI components (cards, filters, layout)
+/lib          → Utility functions
+/actions      → Server actions for data fetching
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 🧩 Getting Started
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Quick start to run the frontend locally:
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+# Clone the repository
+git clone https://github.com/gsvprharsha/findmyfund.git
 
-## Learn More
+# Install dependencies
+npm install
 
-To learn more about Next.js, take a look at the following resources:
+# Run locally
+npm run dev
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+# Open in browser
+http://localhost:3000
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+The frontend runs with Next.js on port `3000` by default.
 
-## Deploy on Vercel
+## ⚖️ License
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+This project is licensed under the **MIT License**. The license applies to the frontend code in this repository. All underlying data, APIs, and database contents remain proprietary and are not covered by this license.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## 🌍 Roadmap
+
+- Add more global VC and accelerator data
+- Implement advanced filters (stage, region, sector)
+- Integrate public API access
+- Add founder-focused analytics and D2C insights
+
+## 💡 About
+
+FindMyFund is part of a broader initiative to help D2C founders and startups connect with the right investors and resources. It supports transparency and accessibility in the funding ecosystem.
+
+---
+
+Built with ❤️ using Next.js, Tailwind, and shadcn/ui.
