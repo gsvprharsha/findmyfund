@@ -20,54 +20,64 @@ export interface Fund {
   linkedin: string
 }
 
-export async function getFunds(): Promise<Fund[]> {
+export async function getFunds(page: number = 1, limit: number = 9): Promise<{ funds: Fund[], total: number }> {
   try {
-    const funds = await prisma.ventureFirm.findMany({
-      select: {
-        id: true,
-        firm: true,
-        city: true,
-        state: true,
-        seed: true,
-        early: true,
-        late: true,
-        categories: true,
-        website: true,
-        crunchbase: true,
-        linkedin: true,
-      },
-    })
+    const skip = (page - 1) * limit
+
+    const [funds, total] = await Promise.all([
+      prisma.ventureFirm.findMany({
+        select: {
+          id: true,
+          firm: true,
+          city: true,
+          state: true,
+          seed: true,
+          early: true,
+          late: true,
+          categories: true,
+          website: true,
+          crunchbase: true,
+          linkedin: true,
+        },
+        skip,
+        take: limit,
+        orderBy: { id: 'asc' },
+      }),
+      prisma.ventureFirm.count()
+    ])
 
     // Parse the categories from JSON string and convert to the expected format
-    return funds.map((fund: any) => {
+    const parsedFunds = funds.map((fund: any) => {
       let categories: Array<{ name: string; count: number }> = [];
-      
+
       try {
         // If categories is a string, parse it as JSON
         if (typeof fund.categories === 'string') {
           const parsed = JSON.parse(fund.categories);
-          categories = Array.isArray(parsed) 
+          categories = Array.isArray(parsed)
             ? parsed.map((name: string) => ({ name, count: 0 }))
             : [];
-        } 
+        }
         // If it's already an array, use it directly
         else if (Array.isArray(fund.categories)) {
-          categories = fund.categories.map((item: string | { name: string }) => 
+          categories = fund.categories.map((item: string | { name: string }) =>
             typeof item === 'string' ? { name: item, count: 0 } : item
           );
         }
       } catch (error) {
         console.error('Error parsing categories:', error);
       }
-      
+
       return {
         ...fund,
         categories
       };
     })
+
+    return { funds: parsedFunds, total }
   } catch (error) {
     console.error("Error fetching funds:", error)
-    return []
+    return { funds: [], total: 0 }
   } finally {
     await prisma.$disconnect()
   }

@@ -26,19 +26,25 @@ export default function Home() {
   const [selectedCategory, setSelectedCategory] = useState("all")
   const [selectedState, setSelectedState] = useState("all")
   const [currentPage, setCurrentPage] = useState(1)
+  const [totalFunds, setTotalFunds] = useState(0)
+  const [loadedPages, setLoadedPages] = useState<number[]>([1])
 
   useEffect(() => {
-    const fetchData = async () => {
+    const fetchInitialData = async () => {
       try {
         setIsLoading(true)
-        const [fundsData, categoriesData, statesData] = await Promise.all([
-          getFunds(),
+        const [categoriesData, statesData] = await Promise.all([
           getCategories(),
           getStates()
         ])
-        setFunds(fundsData)
         setAllCategories(categoriesData)
         setAllStates(statesData)
+
+        // Fetch first page of funds
+        const fundsResult = await getFunds(1, ITEMS_PER_PAGE)
+        setFunds(fundsResult.funds)
+        setTotalFunds(fundsResult.total)
+        setLoadedPages([1])
       } catch (error) {
         console.error("Error fetching data:", error)
       } finally {
@@ -46,8 +52,37 @@ export default function Home() {
       }
     }
 
-    fetchData()
+    fetchInitialData()
   }, [])
+
+  // Fetch additional pages when needed
+  useEffect(() => {
+    const fetchPageData = async () => {
+      if (loadedPages.includes(currentPage) || isLoading) return
+
+      try {
+        setIsLoading(true)
+        const fundsResult = await getFunds(currentPage, ITEMS_PER_PAGE)
+
+        setFunds(prevFunds => {
+          const newFunds = [...prevFunds, ...fundsResult.funds]
+          // Remove duplicates based on id
+          const uniqueFunds = newFunds.filter((fund, index, self) =>
+            index === self.findIndex(f => f.id === fund.id)
+          )
+          return uniqueFunds
+        })
+
+        setLoadedPages(prev => [...prev, currentPage])
+      } catch (error) {
+        console.error("Error fetching page data:", error)
+      } finally {
+        setIsLoading(false)
+      }
+    }
+
+    fetchPageData()
+  }, [currentPage, loadedPages, isLoading])
 
   const filteredFunds = useMemo(() => {
     if (isLoading) return []
@@ -76,7 +111,7 @@ export default function Home() {
     })
   }, [funds, searchQuery, selectedStage, selectedCategory, selectedState, isLoading])
 
-  const totalPages = Math.ceil(filteredFunds.length / ITEMS_PER_PAGE)
+  const totalPages = Math.ceil(totalFunds / ITEMS_PER_PAGE)
   const startIndex = (currentPage - 1) * ITEMS_PER_PAGE
   const endIndex = startIndex + ITEMS_PER_PAGE
   const displayedFunds = filteredFunds.slice(startIndex, endIndex)
@@ -95,6 +130,19 @@ export default function Home() {
     return (value: T) => {
       setter(value)
       setCurrentPage(1)
+      // Reset loaded pages when filters change
+      setLoadedPages([1])
+      // Refetch first page with new filters
+      const refetchFirstPage = async () => {
+        try {
+          const fundsResult = await getFunds(1, ITEMS_PER_PAGE)
+          setFunds(fundsResult.funds)
+          setTotalFunds(fundsResult.total)
+        } catch (error) {
+          console.error("Error refetching data:", error)
+        }
+      }
+      refetchFirstPage()
     }
   }
 
@@ -106,7 +154,7 @@ export default function Home() {
         <div className="max-w-7xl mx-auto px-4 py-8 space-y-8">
           <div className="flex items-start justify-between gap-4">
             <div className="space-y-4 flex-1">
-              <h1 className="text-4xl font-semibold text-balance">Explore {funds.length}+ Funds, Accelerators, and Incubators Worldwide</h1>
+              <h1 className="text-4xl font-semibold text-balance">Explore 700+ Funds, Accelerators, and Incubators Worldwide</h1>
               <p className="text-lg text-muted-foreground max-w-2xl text-pretty">
               Discover and connect with top funds, accelerators, and incubators worldwide. Filter by location, type, and industry focus.
               </p>
@@ -153,7 +201,7 @@ export default function Home() {
           />
 
           <div className="text-sm text-muted-foreground">
-            Showing {displayedFunds.length} of {filteredFunds.length} funds
+            Showing {displayedFunds.length} of {filteredFunds.length} funds (from {totalFunds} total)
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
