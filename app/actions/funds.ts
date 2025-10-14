@@ -2,9 +2,7 @@
 
 "use server"
 
-import { PrismaClient, Prisma } from "@prisma/client"
-
-const prisma = new PrismaClient()
+import { prisma } from "@/app/lib/prisma"
 
 export interface Fund {
   id: number
@@ -186,7 +184,7 @@ export async function getFunds(
     console.error("Error fetching funds:", error)
     return { funds: [], total: 0 }
   } finally {
-    await prisma.$disconnect()
+    // keep connection open via singleton
   }
 }
 
@@ -234,7 +232,7 @@ export async function debugCategories(): Promise<any> {
     console.error("Error in debugCategories:", error)
     return { error: error.message }
   } finally {
-    await prisma.$disconnect()
+    // keep connection open via singleton
   }
 }
 
@@ -274,7 +272,7 @@ export async function getCategories(): Promise<string[]> {
     console.error("Error fetching categories:", error)
     return []
   } finally {
-    await prisma.$disconnect()
+    // keep connection open via singleton
   }
 }
 
@@ -290,6 +288,6 @@ export async function getStates(): Promise<string[]> {
     console.error("Error fetching states:", error)
     return []
   } finally {
-    await prisma.$disconnect()
+    // keep connection open via singleton
   }
 }
