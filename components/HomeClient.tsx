@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from "react"
 import { Filters } from "@/components/Filters"
 import { FundCard } from "@/components/FundCard"
 import { ThemeToggle } from "@/components/ThemeToggle"
+import { WelcomeDialog } from "@/components/WelcomeDialog"
 import { Button } from "@/components/ui/button"
 import { Skeleton } from "@/components/ui/skeleton"
 import { ChevronLeft, ChevronRight, Coffee, Plus } from "lucide-react"
@@ -98,6 +99,8 @@ export function HomeClient({
   }, [currentPage, debouncedSearch, selectedStage, selectedCategory, selectedState, itemsPerPage])
 
   return (
+    <>
+    <WelcomeDialog />
     <main className="min-h-screen pt-14 font-[family-name:var(--font-geist-sans)]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
         <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-6">
@@ -224,6 +227,7 @@ export function HomeClient({
         )}
       </div>
     </main>
+    </>
   )
 }
 
