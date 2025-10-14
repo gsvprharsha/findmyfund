@@ -10,7 +10,7 @@ FindMyFund is an **open-source frontend** that helps founders, investors, and op
 
 </div>
 
-## 🧱 Tech Stack
+## Tech Stack
 
 - Next.js (App Router)
 - Tailwind CSS
