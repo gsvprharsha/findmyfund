@@ -4,7 +4,6 @@ import { useEffect, useMemo, useState } from "react"
 import { Filters } from "@/components/Filters"
 import { FundCard } from "@/components/FundCard"
 import { ThemeToggle } from "@/components/ThemeToggle"
-import { WelcomeDialog } from "@/components/WelcomeDialog"
 import { Button } from "@/components/ui/button"
 import { Skeleton } from "@/components/ui/skeleton"
 import { ChevronLeft, ChevronRight, Coffee, Plus } from "lucide-react"
@@ -80,7 +79,7 @@ export function HomeClient({
           setFunds(fundsResult.funds)
           setTotalFunds(fundsResult.total)
         }
-      } catch (e) {
+      } catch {
         if (!cancelled) {
           setFunds([])
           setTotalFunds(0)

@@ -17,9 +17,9 @@ export const getCategoriesCached = cache(async (): Promise<string[]> => {
 
   const allCategories = new Set<string>()
 
-  funds.forEach((fund: { categories: any }) => {
+  funds.forEach((fund: { categories: unknown }) => {
     try {
-      let categories: any
+      let categories: unknown
       if (typeof fund.categories === "string") {
         categories = JSON.parse(fund.categories)
       } else {
@@ -27,9 +27,11 @@ export const getCategoriesCached = cache(async (): Promise<string[]> => {
       }
 
       if (Array.isArray(categories)) {
-        categories.forEach((cat: string) => allCategories.add(cat))
+        categories.forEach((cat) => {
+          if (typeof cat === "string") allCategories.add(cat)
+        })
       } else if (typeof categories === "object" && categories !== null) {
-        Object.keys(categories).forEach((cat: string) => allCategories.add(cat))
+        Object.keys(categories as Record<string, unknown>).forEach((cat) => allCategories.add(cat))
       }
     } catch {
       // ignore invalid rows
