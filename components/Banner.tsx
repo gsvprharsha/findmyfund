@@ -3,7 +3,7 @@ import Link from "next/link"
 export function Banner() {
   return (
     <Link 
-      href="https://app.flareb2b.com"
+      href="http://flare-explore.vercel.app/"
       target="_blank"
       rel="noopener noreferrer"
       className="block fixed top-0 left-0 right-0 z-50 bg-[#d4ff00] border-b border-[#c0eb00] shadow-md animate-in fade-in duration-500 font-[family-name:var(--font-geist-sans)] hover:bg-[#c9f200] transition-colors"

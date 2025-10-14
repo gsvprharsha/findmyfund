@@ -15,7 +15,7 @@ export function Footer() {
             <p className="text-sm text-muted-foreground">Created by</p>
             <div className="flex items-center gap-3">
               <Link
-                href="https://github.com/gsvprharsha"
+                href="https://github.com/gsvprharsha/findmyfund"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-2 text-sm font-medium hover:text-primary transition-colors"
