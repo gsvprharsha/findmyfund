@@ -5,6 +5,7 @@ import { Filters } from "@/components/Filters"
 import { FundCard } from "@/components/FundCard"
 import { ThemeToggle } from "@/components/ThemeToggle"
 import { WelcomeDialog } from "@/components/WelcomeDialog"
+import { NewsBanner } from "@/components/NewsBanner"
 import { Button } from "@/components/ui/button"
 import { Skeleton } from "@/components/ui/skeleton"
 import { ChevronLeft, ChevronRight, Coffee, Plus } from "lucide-react"
@@ -12,11 +13,21 @@ import Image from "next/image"
 import Link from "next/link"
 import { getFunds, type Fund } from "@/app/actions/funds"
 
+interface NewsItem {
+  id: number
+  title: string
+  url: string
+  imageUrl?: string | null
+  source?: string | null
+  createdAt: Date
+}
+
 interface HomeClientProps {
   initialFunds: Fund[]
   initialTotal: number
   categories: string[]
   states: string[]
+  news: NewsItem[]
   itemsPerPage?: number
 }
 
@@ -27,6 +38,7 @@ export function HomeClient({
   initialTotal,
   categories,
   states,
+  news,
   itemsPerPage = DEFAULT_ITEMS_PER_PAGE,
 }: HomeClientProps) {
   const [funds, setFunds] = useState<Fund[]>(initialFunds)
@@ -150,6 +162,8 @@ export function HomeClient({
           selectedState={selectedState}
           onStateChange={handleFilterChange(setSelectedState)}
         />
+
+        <NewsBanner initialNews={news} />
 
         <div className="text-sm text-muted-foreground">
           Showing {funds.length} of {totalFunds} funds
