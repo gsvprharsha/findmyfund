@@ -1,11 +1,16 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { InfiniteSlider } from '@/components/ui/infinite-slider';
 import { ProgressiveBlur } from '@/components/ui/progressive-blur';
 import { Newspaper } from 'lucide-react';
+
+function getRandomGradient(): string {
+  const randomNum = Math.floor(Math.random() * 15) + 1;
+  return `/assets/gradients/gradient-${randomNum}.png`;
+}
 
 interface NewsItem {
   id: number;
@@ -22,6 +27,7 @@ interface NewsBannerProps {
 
 function NewsCard({ item }: { item: NewsItem }) {
   const [imageError, setImageError] = useState(false);
+  const randomGradient = useMemo(() => getRandomGradient(), []);
 
   return (
     <Link
@@ -30,30 +36,43 @@ function NewsCard({ item }: { item: NewsItem }) {
       rel="noopener noreferrer"
       className="group flex items-center gap-3 px-3 py-2.5 bg-card/50 hover:bg-card/80 border rounded-lg transition-all duration-200 hover:shadow-md min-w-[280px] max-w-[320px] mx-2"
     >
-      {/* Image */}
-      <div className="relative w-12 h-12 flex-shrink-0 rounded-md overflow-hidden bg-muted">
+      <div className="relative w-14 h-14 flex-shrink-0 rounded-md overflow-hidden">
         {item.imageUrl && !imageError ? (
           <Image
             src={item.imageUrl}
             alt={item.title}
             fill
             className="object-cover"
-            sizes="48px"
+            sizes="56px"
             unoptimized
             onError={() => setImageError(true)}
           />
         ) : (
-          <div className="w-full h-full flex items-center justify-center">
-            <Newspaper className="h-5 w-5 text-muted-foreground" />
-          </div>
+          <Image
+            src={randomGradient}
+            alt="Gradient background"
+            fill
+            className="object-cover"
+            sizes="56px"
+            unoptimized
+          />
         )}
       </div>
       
-      {/* Content */}
-      <div className="flex-1 min-w-0 px-2">
+      <div className="flex-1 min-w-0 flex flex-col gap-1.5">
         {item.source && (
-          <div className="text-[10px] font-medium text-muted-foreground uppercase tracking-wide mb-1">
-            {item.source}
+          <div className="inline-flex items-center gap-1.5 self-start px-2 py-0.5 bg-muted/50 rounded-full border border-foreground/20">
+            <Image
+              src={`https://www.google.com/s2/favicons?domain=${new URL(item.url).hostname}&sz=16`}
+              alt={`${item.source} favicon`}
+              width={12}
+              height={12}
+              className="flex-shrink-0"
+              unoptimized
+            />
+            <span className="text-[10px] font-medium text-muted-foreground uppercase tracking-wide">
+              {item.source}
+            </span>
           </div>
         )}
         <div className="text-sm font-medium leading-tight line-clamp-2 group-hover:text-primary transition-colors">
