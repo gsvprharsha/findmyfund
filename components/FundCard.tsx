@@ -1,7 +1,7 @@
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { ExternalLink, Globe } from "lucide-react"
-import type { Fund } from "@/data/funds"
+import type { Fund } from "@/app/actions/funds"
 import Link from "next/link"
 import Image from "next/image"
 
@@ -33,10 +33,63 @@ export function FundCard({ fund }: FundCardProps) {
   if (fund.early) stages.push("Early")
   if (fund.late) stages.push("Late")
 
+  const getTypeLabel = (type: string) => {
+    switch (type) {
+      case "vc":
+        return "VC"
+      case "incubator":
+        return "Incubator"
+      case "accelerator":
+        return "Accelerator"
+      default:
+        return type
+    }
+  }
+
+  const getTypeBadgeStyle = (type: string) => {
+    switch (type) {
+      case "vc":
+        return {
+          variant: "default" as const,
+          className: "bg-blue-600 text-white border-blue-700 dark:bg-blue-500 dark:border-blue-600 shadow-sm"
+        }
+      case "incubator":
+        return {
+          variant: "default" as const,
+          className: "bg-green-600 text-white border-green-700 dark:bg-green-500 dark:border-green-600 shadow-sm"
+        }
+      case "accelerator":
+        return {
+          variant: "default" as const,
+          className: "bg-purple-600 text-white border-purple-700 dark:bg-purple-500 dark:border-purple-600 shadow-sm"
+        }
+      default:
+        return {
+          variant: "secondary" as const,
+          className: "shadow-sm"
+        }
+    }
+  }
+
   return (
     <Card className="group hover:scale-[1.02] hover:shadow-lg transition-all duration-300 rounded-2xl">
       <CardHeader className="space-y-2">
-        <h3 className="text-lg font-semibold text-balance leading-tight">{fund.firm}</h3>
+        <div className="flex items-start justify-between gap-2">
+          <h3 className="text-lg font-semibold text-balance leading-tight flex-1">{fund.firm}</h3>
+          <div className="flex items-center gap-2 shrink-0">
+            {fund.country && (
+              <Badge variant="default" className="font-semibold">
+                {fund.country}
+              </Badge>
+            )}
+            <Badge 
+              variant={getTypeBadgeStyle(fund.type).variant}
+              className={`font-semibold ${getTypeBadgeStyle(fund.type).className}`}
+            >
+              {getTypeLabel(fund.type)}
+            </Badge>
+          </div>
+        </div>
         <p className="text-sm text-muted-foreground">
           {fund.city}, {fund.state}
         </p>

@@ -41,4 +41,12 @@ export const getCategoriesCached = cache(async (): Promise<string[]> => {
   return Array.from(allCategories).sort()
 })
 
+export const getCountriesCached = cache(async (): Promise<string[]> => {
+  const countries = await prisma.ventureFirm.findMany({
+    distinct: ["country"],
+    select: { country: true },
+    orderBy: { country: "asc" },
+  })
+  return countries.map((c: { country: string | null }) => c.country).filter(Boolean) as string[]
+})
 

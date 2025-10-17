@@ -27,6 +27,7 @@ interface HomeClientProps {
   initialTotal: number
   categories: string[]
   states: string[]
+  countries: string[]
   news: NewsItem[]
   itemsPerPage?: number
 }
@@ -38,17 +39,21 @@ export function HomeClient({
   initialTotal,
   categories,
   states,
+  countries,
   news,
   itemsPerPage = DEFAULT_ITEMS_PER_PAGE,
 }: HomeClientProps) {
   const [funds, setFunds] = useState<Fund[]>(initialFunds)
   const [allCategories] = useState<string[]>(categories)
   const [allStates] = useState<string[]>(states)
+  const [allCountries] = useState<string[]>(countries)
   const [isLoading, setIsLoading] = useState(false)
   const [searchQuery, setSearchQuery] = useState("")
+  const [selectedType, setSelectedType] = useState("all")
   const [selectedStage, setSelectedStage] = useState("all")
   const [selectedCategory, setSelectedCategory] = useState("all")
   const [selectedState, setSelectedState] = useState("all")
+  const [selectedCountry, setSelectedCountry] = useState("all")
   const [currentPage, setCurrentPage] = useState(1)
   const [totalFunds, setTotalFunds] = useState(initialTotal)
 
@@ -84,9 +89,11 @@ export function HomeClient({
       try {
         const fundsResult = await getFunds(currentPage, itemsPerPage, {
           search: debouncedSearch || undefined,
+          type: selectedType !== 'all' ? selectedType : undefined,
           stage: selectedStage !== 'all' ? selectedStage : undefined,
           category: selectedCategory !== 'all' ? selectedCategory : undefined,
           state: selectedState !== 'all' ? selectedState : undefined,
+          country: selectedCountry !== 'all' ? selectedCountry : undefined,
         })
         if (!cancelled) {
           setFunds(fundsResult.funds)
@@ -108,7 +115,7 @@ export function HomeClient({
     return () => {
       cancelled = true
     }
-  }, [currentPage, debouncedSearch, selectedStage, selectedCategory, selectedState, itemsPerPage])
+  }, [currentPage, debouncedSearch, selectedType, selectedStage, selectedCategory, selectedState, selectedCountry, itemsPerPage])
 
   return (
     <>
@@ -153,6 +160,8 @@ export function HomeClient({
         <Filters
           searchQuery={searchQuery}
           onSearchChange={handleFilterChange(setSearchQuery)}
+          selectedType={selectedType}
+          onTypeChange={handleFilterChange(setSelectedType)}
           selectedStage={selectedStage}
           onStageChange={handleFilterChange(setSelectedStage)}
           selectedCategory={selectedCategory}
@@ -161,6 +170,9 @@ export function HomeClient({
           states={allStates}
           selectedState={selectedState}
           onStateChange={handleFilterChange(setSelectedState)}
+          countries={allCountries}
+          selectedCountry={selectedCountry}
+          onCountryChange={handleFilterChange(setSelectedCountry)}
         />
 
         <NewsBanner initialNews={news} />
@@ -194,13 +206,7 @@ export function HomeClient({
             funds.map((fund) => (
               <FundCard
                 key={fund.id || fund.firm}
-                fund={{
-                  ...fund,
-                  numFunds: 0,
-                  totalRaised: "0",
-                  investments: 0,
-                  exits: 0,
-                }}
+                fund={fund}
               />
             ))
           ) : (

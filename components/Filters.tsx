@@ -7,6 +7,8 @@ import { Search } from "lucide-react"
 interface FiltersProps {
   searchQuery: string
   onSearchChange: (value: string) => void
+  selectedType: string
+  onTypeChange: (value: string) => void
   selectedStage: string
   onStageChange: (value: string) => void
   selectedCategory: string
@@ -15,16 +17,24 @@ interface FiltersProps {
   states?: string[]
   onStateChange?: (value: string) => void
   selectedState?: string
+  countries?: string[]
+  onCountryChange?: (value: string) => void
+  selectedCountry?: string
 }
 
 export function Filters({
   searchQuery,
   onSearchChange,
+  selectedType,
+  onTypeChange,
   selectedStage,
   onStageChange,
   selectedCategory,
   onCategoryChange,
   categories,
+  countries,
+  selectedCountry,
+  onCountryChange,
 }: FiltersProps) {
   return (
     <div className="flex flex-col sm:flex-row gap-3 p-3 sm:p-4 bg-card rounded-xl border shadow-sm">
@@ -38,7 +48,35 @@ export function Filters({
         />
       </div>
 
-      <div className="flex gap-3">
+      <div className="grid grid-cols-2 sm:flex sm:flex-row gap-3">
+        {countries && countries.length > 0 && onCountryChange && (
+          <Select value={selectedCountry} onValueChange={onCountryChange}>
+            <SelectTrigger className="w-full sm:w-[140px] md:w-[180px]">
+              <SelectValue placeholder="Country" />
+            </SelectTrigger>
+            <SelectContent className="font-[family-name:var(--font-geist-sans)]">
+              <SelectItem value="all">All Countries</SelectItem>
+              {countries.map((country) => (
+                <SelectItem key={country} value={country}>
+                  {country}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        )}
+
+        <Select value={selectedType} onValueChange={onTypeChange}>
+          <SelectTrigger className="w-full sm:w-[140px] md:w-[180px]">
+            <SelectValue placeholder="Type" />
+          </SelectTrigger>
+          <SelectContent className="font-[family-name:var(--font-geist-sans)]">
+            <SelectItem value="all">All Types</SelectItem>
+            <SelectItem value="vc">VC</SelectItem>
+            <SelectItem value="accelerator">Accelerator</SelectItem>
+            <SelectItem value="incubator">Incubator</SelectItem>
+          </SelectContent>
+        </Select>
+
         <Select value={selectedStage} onValueChange={onStageChange}>
           <SelectTrigger className="w-full sm:w-[140px] md:w-[180px]">
             <SelectValue placeholder="Investment Stage" />

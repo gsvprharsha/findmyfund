@@ -8,24 +8,32 @@ datasource db {
 }
 
 model VentureFirm {
-  id         Int     @id @default(autoincrement())
+  id         Int      @id @default(autoincrement())
   firm       String
   city       String
   state      String
-  seed       Boolean @default(false)
-  early      Boolean @default(false)
-  late       Boolean @default(false)
+  seed       Boolean  @default(false)
+  early      Boolean  @default(false)
+  late       Boolean  @default(false)
   categories Json
   website    String?
   crunchbase String?
   linkedin   String?
+  type       FirmType
+  country    String
 }
 
 model News {
   id        Int      @id @default(autoincrement())
   title     String
   url       String
+  createdAt DateTime @default(now())
   imageUrl  String?
   source    String?
-  createdAt DateTime @default(now())
+}
+
+enum FirmType {
+  vc
+  incubator
+  accelerator
 }

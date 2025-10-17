@@ -49,9 +49,7 @@ export function WelcomeDialog() {
           <DialogTitle className="text-2xl">Welcome to FindMyFund</DialogTitle>
           <DialogDescription className="text-base space-y-4 pt-2">
             <p>
-              Discover and connect with top seed-stage venture capital firms across the world. Our directory
-              currently features <strong>US-based funds</strong>, but we&apos;re actively expanding to include
-              international funds soon.
+              Discover and connect with top seed-stage venture capital firms across the world.
             </p>
             <p>
               Want to help us grow? If you know of a fund that should be listed or have suggestions, please contribute

@@ -91,7 +91,7 @@ export function NewsBanner({ initialNews }: NewsBannerProps) {
       <div className="w-full py-6">
         <div className="flex items-center gap-3 mb-4">
           <Newspaper className="h-5 w-5 text-muted-foreground" />
-          <h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">Latest VC & Startup News</h2>
+          <h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">Latest Startup News</h2>
         </div>
         <div className="flex items-center justify-center py-8 px-4 bg-card/30 rounded-lg border border-dashed">
           <p className="text-sm text-muted-foreground">No latest news available at this moment</p>
@@ -104,7 +104,7 @@ export function NewsBanner({ initialNews }: NewsBannerProps) {
     <div className="w-full py-6">
       <div className="flex items-center gap-3 mb-4">
         <Newspaper className="h-5 w-5 text-muted-foreground" />
-        <h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">Latest VC & Startup News</h2>
+        <h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">Latest Startup News</h2>
       </div>
       <div className="relative">
         <InfiniteSlider speedOnHover={10} speed={40} gap={24}>

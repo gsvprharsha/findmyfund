@@ -9,6 +9,7 @@ export interface Fund {
   firm: string
   city: string
   state: string
+  country: string | null
   seed: boolean
   early: boolean
   late: boolean
@@ -16,6 +17,7 @@ export interface Fund {
   website: string
   crunchbase: string
   linkedin: string
+  type: string
 }
 
 export async function getFunds(
@@ -26,6 +28,8 @@ export async function getFunds(
     stage?: string
     category?: string
     state?: string
+    country?: string
+    type?: string
   }
 ): Promise<{ funds: Fund[], total: number }> {
   try {
@@ -57,6 +61,14 @@ export async function getFunds(
       whereConditions.push({ state: filters.state })
     }
 
+    if (filters?.country && filters.country !== 'all') {
+      whereConditions.push({ country: filters.country })
+    }
+
+    if (filters?.type && filters.type !== 'all') {
+      whereConditions.push({ type: filters.type })
+    }
+
     // For category filtering, we'll handle it server-side by fetching all and filtering
     // This is a temporary solution until we implement proper JSON array queries
     const where = whereConditions.length > 0 ? { AND: whereConditions } : {}
@@ -69,6 +81,7 @@ export async function getFunds(
           firm: true,
           city: true,
           state: true,
+          country: true,
           seed: true,
           early: true,
           late: true,
@@ -76,6 +89,7 @@ export async function getFunds(
           website: true,
           crunchbase: true,
           linkedin: true,
+          type: true,
         },
         skip,
         take: limit,
@@ -101,6 +115,7 @@ export async function getFunds(
             firm: true,
             city: true,
             state: true,
+            country: true,
             seed: true,
             early: true,
             late: true,
@@ -108,6 +123,7 @@ export async function getFunds(
             website: true,
             crunchbase: true,
             linkedin: true,
+            type: true,
           },
           orderBy: { id: 'asc' },
         })
@@ -119,6 +135,7 @@ export async function getFunds(
             firm: true,
             city: true,
             state: true,
+            country: true,
             seed: true,
             early: true,
             late: true,
@@ -126,6 +143,7 @@ export async function getFunds(
             website: true,
             crunchbase: true,
             linkedin: true,
+            type: true,
           },
           orderBy: { id: 'asc' },
         })
@@ -286,6 +304,22 @@ export async function getStates(): Promise<string[]> {
     return states.map((s: { state: string }) => s.state).filter(Boolean) as string[]
   } catch (error) {
     console.error("Error fetching states:", error)
+    return []
+  } finally {
+    // keep connection open via singleton
+  }
+}
+
+export async function getCountries(): Promise<string[]> {
+  try {
+    const countries = await prisma.ventureFirm.findMany({
+      distinct: ['country'],
+      select: { country: true },
+      orderBy: { country: 'asc' },
+    })
+    return countries.map((c: { country: string | null }) => c.country).filter(Boolean) as string[]
+  } catch (error) {
+    console.error("Error fetching countries:", error)
     return []
   } finally {
     // keep connection open via singleton
