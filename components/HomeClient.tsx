@@ -217,7 +217,7 @@ export function HomeClient({
               disabled={currentPage === 1}
               variant="outline"
               size="sm"
-              className="gap-2 bg-transparent"
+              className="gap-2 bg-transparent cursor-pointer"
             >
               <ChevronLeft className="h-4 w-4" />
               Previous
@@ -232,7 +232,7 @@ export function HomeClient({
               disabled={currentPage === totalPages}
               variant="outline"
               size="sm"
-              className="gap-2 bg-transparent"
+              className="gap-2 bg-transparent cursor-pointer"
             >
               Next
               <ChevronRight className="h-4 w-4" />

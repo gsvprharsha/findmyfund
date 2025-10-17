@@ -7,22 +7,13 @@ import { randomInt } from 'crypto';
 
 export async function getLatestNews() {
   try {
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
-    
-    const tomorrow = new Date(today);
-    tomorrow.setDate(tomorrow.getDate() + 1);
-    
+    // Fetch the most recent news items, regardless of date
+    // This ensures we always show the latest news even across date boundaries
     const news = await prisma.news.findMany({
-      where: {
-        createdAt: {
-          gte: today,
-          lt: tomorrow,
-        },
-      },
       orderBy: {
         createdAt: 'desc',
       },
+      take: 5, // Limit to 10 most recent items
     });
     
     return news;
