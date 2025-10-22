@@ -7,15 +7,14 @@ import { randomInt } from 'crypto';
 
 export async function getLatestNews() {
   try {
-    // Fetch the most recent news items, regardless of date
-    // This ensures we always show the latest news even across date boundaries
+    // Fetch the 5 most recently created news items from the database
     const news = await prisma.news.findMany({
       orderBy: {
         createdAt: 'desc',
       },
-      take: 5, // Limit to 10 most recent items
+      take: 5, // Get the latest 5 rows (most recently created)
     });
-    
+
     return news;
   } catch (error) {
     console.error('Error fetching news:', error);
@@ -90,14 +89,11 @@ export async function processAndStoreRSSNews(): Promise<{ success: boolean; coun
 
     const totalExistingArticles = existingNews.length;
     const existingUrls = new Set(existingNews.map(news => news.url));
-    
-    if (totalExistingArticles >= 5) {
-      return { success: true, count: 0 };
-    }
 
+    // Always try to fetch fresh articles, even if we already have some for today
     const MAX_TOTAL_ARTICLES = 5;
-    const articlesNeeded = MAX_TOTAL_ARTICLES - totalExistingArticles;
-    
+    const articlesNeeded = Math.max(0, MAX_TOTAL_ARTICLES - totalExistingArticles);
+
     let storedCount = 0;
     const sourceCount: Record<string, number> = {};
     const maxAttempts = 30;
@@ -140,7 +136,7 @@ export async function processAndStoreRSSNews(): Promise<{ success: boolean; coun
           existingUrls.add(article.url);
           storedCount++;
           sourceCount[article.source] = (sourceCount[article.source] || 0) + 1;
-          
+
           articleStored = true;
           break;
         }
@@ -159,10 +155,10 @@ export async function processAndStoreRSSNews(): Promise<{ success: boolean; coun
         console.log(`  - ${source}: ${count} article${count !== 1 ? 's' : ''}`);
       });
     }
-    
+
     const sevenDaysAgo = new Date();
     sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
-    
+
     await prisma.news.deleteMany({
       where: {
         createdAt: {
@@ -174,10 +170,10 @@ export async function processAndStoreRSSNews(): Promise<{ success: boolean; coun
     return { success: true, count: storedCount };
   } catch (error) {
     console.error('Error processing RSS news:', error);
-    return { 
-      success: false, 
-      count: 0, 
-      error: error instanceof Error ? error.message : 'Unknown error' 
+    return {
+      success: false,
+      count: 0,
+      error: error instanceof Error ? error.message : 'Unknown error'
     };
   }
 }
