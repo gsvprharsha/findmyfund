@@ -9,7 +9,7 @@ export const getStatesCached = cache(async (): Promise<string[]> => {
     select: { state: true },
     orderBy: { state: "asc" },
   })
-  return states.map((s: { state: string }) => s.state).filter(Boolean) as string[]
+  return states.map((s: { state: string }) => s.state).filter((state): state is string => Boolean(state && state.trim())) as string[]
 })
 
 export const getCategoriesCached = cache(async (): Promise<string[]> => {
@@ -47,6 +47,13 @@ export const getCountriesCached = cache(async (): Promise<string[]> => {
     select: { country: true },
     orderBy: { country: "asc" },
   })
-  return countries.map((c: { country: string | null }) => c.country).filter(Boolean) as string[]
+  
+  // Filter out null, undefined, and empty strings
+  const filteredCountries = countries
+    .map((c: { country: string | null }) => c.country)
+    .filter((country): country is string => Boolean(country && country.trim()))
+    .sort()
+  
+  return filteredCountries
 })
 
